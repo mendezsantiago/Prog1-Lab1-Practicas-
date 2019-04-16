@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <conio.h>
 
-#define TAM 2
+#define TAM 5
 typedef struct{int dia,mes,anio;}fecha;
 
 typedef struct
@@ -26,14 +26,17 @@ void mostrarEmpleados(eEmpleado vec[], int tam);
 void altaEmpleado(eEmpleado vec[], int tam);
 void bajaEmpleado(eEmpleado vec[], int tam);
 void ModificacionEmpleado(eEmpleado vec[], int tam);
+void hardcoreo(eEmpleado vec [], int tam);
+void empleadoXanio(eEmpleado vec [], int tam, int anio);
 
 int main()
 {
     char seguir = 's';
     char confirma;
+    int anios;
     eEmpleado lista[TAM];
     inicializarEmpleados(lista, TAM); // llamada
-
+    hardcoreo(lista, 0);
     do
     {
         switch(menu())
@@ -69,6 +72,13 @@ int main()
             break;
 
         case 6:
+            printf("Informe\n\nIngrese anio a buscar: ");
+            scanf("%d",&anios);
+            empleadoXanio(lista, TAM,anios);
+            system("pause");
+            break;
+
+        case 7:
             printf("\nConfirma salida s/n?: ");
             fflush(stdin);
             confirma = getche();
@@ -109,7 +119,8 @@ int menu()
     printf("3- Modificacion Empleado\n");
     printf("4- Ordenar Empleados\n");
     printf("5- Listar Empleados\n");
-    printf("6- Salir\n\n");
+    printf("6- EmpleadosXanio\n");
+    printf("7- Salir\n\n");
     printf("Ingrese opcion: ");
     scanf("%d", &opcion);
 
@@ -151,7 +162,7 @@ int buscarEmpleado(eEmpleado vec[], int tam, int legajo)
 void mostrarEmpleado(eEmpleado emp)
 {
 
-    printf("  %d   %s   %c    %.2f  Fecha de ingreso: %02d/%02d/%d\n", emp.legajo, emp.nombre, emp.sexo, emp.sueldo,emp.fn.dia,emp.fn.mes,emp.fn.anio);
+    printf("  %d   %s    %c     %.2f    Fecha de ingreso: %02d/%02d/%d\n", emp.legajo, emp.nombre, emp.sexo, emp.sueldo,emp.fn.dia,emp.fn.mes,emp.fn.anio);
 
 }
 
@@ -184,7 +195,7 @@ void altaEmpleado(eEmpleado vec[], int tam)
 
     if(indice == -1)
     {
-        printf("No hay lugar");
+        printf("No hay lugar\n");
     }
     else
     {
@@ -221,13 +232,13 @@ void altaEmpleado(eEmpleado vec[], int tam)
 
             vec[indice].ocupado = 1;
 
-            printf("\nEl empleado ha sido registrado con exito!!!\n\n");
+            printf("\nEl empleado/a ha sido registrado con exito!!!\n\n");
 
         }
         else
         {
 
-            printf("Ya existe un empleado con el legajo %d\n", legajo);
+            printf("Ya existe un empleado/a con el legajo %d\n", legajo);
 
             mostrarEmpleado(vec[esta]);
         }
@@ -252,7 +263,7 @@ void bajaEmpleado(eEmpleado vec[], int tam){
     else{
         mostrarEmpleado(vec[esta]);
 
-        printf("\nConfirma la eliminacion? s/n");
+        printf("\nConfirma la eliminacion? s/n: ");
         fflush(stdin);
         confirma = tolower(getche());
 
@@ -290,7 +301,7 @@ void ModificacionEmpleado(eEmpleado vec[], int tam){
     else{
         mostrarEmpleado(vec[esta]);
 
-        printf("\nQuiere cambiar el sueldo? s/n");
+        printf("\nQuiere cambiar el sueldo? s/n: ");
         fflush(stdin);
         confirma = tolower(getche());
 
@@ -299,11 +310,50 @@ void ModificacionEmpleado(eEmpleado vec[], int tam){
             scanf("%f", &nuevoSueldo);
             //valido sueldo
             vec[esta].sueldo = nuevoSueldo;
+            printf("Sueldo modificado\n");
         }
         else{
             printf("\nNo se ha modificado el sueldo\n");
         }
 
+    }
+
+
+
+
+
+}
+
+void hardcoreo(eEmpleado vec [], int tam){
+
+    eEmpleado empleado[5] = {
+                            {100225, "Alejandro", 'm', 75000, 1, {10,3,1990}},
+                            {114521, "Sonia", 'f', 36000, 1, {24,5,2002}},
+                            {134529, "Eve",'f', 32000, 1, {19,2,2015}},
+                            {201458, "Facu",'m', 16000, 1, {21,10,2014}},
+                            {985241, "Rocio",'f', 52000, 1, {4,5,2002}},
+                            };
+    for(int i = 0; i<tam; i++){
+        vec[i] = empleado[i];
+        }
+
+}
+
+void empleadoXanio(eEmpleado vec [], int tam, int anio){
+    int cont= 0;
+
+    for(int i=0; i < tam; i++)
+    {
+        if(vec[i].ocupado == 1 && vec[i].fn.anio == anio)
+        {
+
+            mostrarEmpleado(vec[i]);
+            cont++;
+        }
+    }
+    if(cont == 0)
+    {
+        printf("No hay empleados que ese anio\n\n");
     }
 
 
