@@ -4,7 +4,9 @@
 #include <conio.h>
 
 #define TAM 5
+
 typedef struct{int dia,mes,anio;}fecha;
+typedef struct{char sectorEmpleado;}sector;
 
 typedef struct
 {
@@ -14,6 +16,7 @@ typedef struct
     float sueldo;
     int ocupado;
     fecha fn;
+    sector sc;
 
 } eEmpleado;
 
@@ -28,11 +31,13 @@ void bajaEmpleado(eEmpleado vec[], int tam);
 void ModificacionEmpleado(eEmpleado vec[], int tam);
 void hardcoreo(eEmpleado vec [], int tam);
 void empleadoXanio(eEmpleado vec [], int tam, int anio);
+void empleadoXsector(eEmpleado vec[], int tam, char sector);
 
 int main()
 {
     char seguir = 's';
     char confirma;
+    char auxSector;
     int anios;
     eEmpleado lista[TAM];
     inicializarEmpleados(lista, TAM); // llamada
@@ -77,8 +82,17 @@ int main()
             empleadoXanio(lista, TAM,anios);
             system("pause");
             break;
-
         case 7:
+            printf("Informe\n\nSector a buscar: ");
+            fflush(stdin);
+            scanf("%c",&auxSector);
+            auxSector = toupper(auxSector);
+            empleadoXsector(lista, TAM,auxSector);
+            system("pause");
+            break;
+
+
+        case 8:
             printf("\nConfirma salida s/n?: ");
             fflush(stdin);
             confirma = getche();
@@ -120,7 +134,8 @@ int menu()
     printf("4- Ordenar Empleados\n");
     printf("5- Listar Empleados\n");
     printf("6- EmpleadosXanio\n");
-    printf("7- Salir\n\n");
+    printf("7- EmpleadosXsector\n");
+    printf("8- Salir\n\n");
     printf("Ingrese opcion: ");
     scanf("%d", &opcion);
 
@@ -162,7 +177,7 @@ int buscarEmpleado(eEmpleado vec[], int tam, int legajo)
 void mostrarEmpleado(eEmpleado emp)
 {
 
-    printf("  %d   %s    %c     %.2f    Fecha de ingreso: %02d/%02d/%d\n", emp.legajo, emp.nombre, emp.sexo, emp.sueldo,emp.fn.dia,emp.fn.mes,emp.fn.anio);
+    printf("  %d   %s    %c     %.2f    Fecha de ingreso: %02d/%02d/%d Sector: %c\n", emp.legajo, emp.nombre, emp.sexo, emp.sueldo,emp.fn.dia,emp.fn.mes,emp.fn.anio, emp.sc.sectorEmpleado);
 
 }
 
@@ -228,6 +243,12 @@ void altaEmpleado(eEmpleado vec[], int tam)
 
             printf("Ingrese anio de ingreso: ");
             scanf("%i",&vec[indice].fn.anio);
+
+            printf("Ingrese sector del empleado (A B o C): ");
+            fflush(stdin);
+            scanf("%c", &vec[indice].sc.sectorEmpleado);
+            vec[indice].sc.sectorEmpleado = toupper(vec[indice].sc.sectorEmpleado);
+
 
 
             vec[indice].ocupado = 1;
@@ -356,9 +377,28 @@ void empleadoXanio(eEmpleado vec [], int tam, int anio){
         printf("No hay empleados que ese anio\n\n");
     }
 
+}
 
+void empleadoXsector(eEmpleado vec[], int tam, char sector){
+    int cont= 0;
+
+    for(int i=0; i < tam; i++)
+    {
+        if(vec[i].ocupado == 1 && vec[i].sc.sectorEmpleado == sector)
+        {
+
+            mostrarEmpleado(vec[i]);
+            cont++;
+        }
+    }
+    if(cont == 0)
+    {
+        printf("No hay empleados en ese sector\n\n");
+    }
 
 
 
 }
+
+
 
